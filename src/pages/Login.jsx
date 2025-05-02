@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router';
+import { AuthContext } from '../Provider/AuthContext';
 
 const Login = () => {
+
+	const {login} = useContext(AuthContext);
+
+	const handleLoginForm = (e) => {
+		e.preventDefault();
+		const email = e.target.email.value;
+		const password = e.target.password.value;
+		login(email,password)
+		.then(result => {
+			console.log(result)
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
     return (
         <div className="w-full max-w-md p-8 space-y-3 rounded-xl mx-auto mt-5 bg-base-200">
 	<h1 className="text-2xl font-bold text-center">Login</h1>
-	<form noValidate="" action="" className="space-y-6">
+	<form onSubmit={handleLoginForm} action="" className="space-y-6">
 		<div className="space-y-1 text-sm">
 			<label htmlFor="username" className="block dark:text-gray-600">Email</label>
 			<input type="email" name="email" id="email" placeholder="email" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600" />
