@@ -14,7 +14,7 @@ const Navbar = () => {
         console.log(error)
       })
     }
-    
+
   return (
     <div className="flex justify-between items-center">
       <div className=""></div>
@@ -24,7 +24,7 @@ const Navbar = () => {
         <NavLink to="/career">Career</NavLink>
       </div>
       <div className="login-btn flex gap-5">
-        <img src={userImage} alt="" />
+        <img referrerPolicy="no-referrer" className="w-[50px] rounded-full" src={user ? user.photoURL : userImage} alt="" />
 
         {
           user ? <button onClick={handleLogOut} className="btn btn-primary px-10 ">Log Out</button> : <Link to='/auth/login' className="btn btn-primary px-10 ">Login</Link>

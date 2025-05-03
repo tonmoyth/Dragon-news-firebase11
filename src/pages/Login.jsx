@@ -1,24 +1,43 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useContext, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { AuthContext } from '../Provider/AuthContext';
+import toast from 'react-hot-toast';
 
 const Login = () => {
-
-	const {login} = useContext(AuthContext);
+	const {login,resetPasswordEmail} = useContext(AuthContext);
 	const navigate = useNavigate();
+	const {state} = useLocation();
+	const [error,setError] = useState('')
+	const emailRef = useRef();
+	
+
 
 	const handleLoginForm = (e) => {
+		toast.loading('loading',{id:'123'})
 		e.preventDefault();
 		const email = e.target.email.value;
 		const password = e.target.password.value;
 		login(email,password)
 		.then(result => {
 			console.log(result)
-			navigate('/')
+			navigate(`${state ? state : '/'}`)
+			toast.success('success',{id:'123'})
 
 		})
 		.catch(error => {
-			console.log(error);
+			toast.error(error.message,{id:'123'})
+
+		})
+	}
+
+	const handleForget = () => {
+		const email = emailRef.current.value;
+		resetPasswordEmail(email)
+		.then(()=> {
+			console.log('check your email')
+		})
+		.catch(error => {
+			setError(error.message)
 		})
 	}
 
@@ -28,13 +47,14 @@ const Login = () => {
 	<form onSubmit={handleLoginForm} action="" className="space-y-6">
 		<div className="space-y-1 text-sm">
 			<label htmlFor="username" className="block dark:text-gray-600">Email</label>
-			<input type="email" name="email" id="email" placeholder="email" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600" />
+			<input ref={emailRef} type="email" name="email" id="email" placeholder="email" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600" />
 		</div>
 		<div className="space-y-1 text-sm">
 			<label htmlFor="password" className="block dark:text-gray-600">Password</label>
 			<input type="password" name="password" id="password" placeholder="Password" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600" />
-			<div className="flex justify-end text-xs dark:text-gray-600">
-				<a rel="noopener noreferrer" href="#">Forgot Password?</a>
+			<div className="flex justify-between text-xs dark:text-gray-600">
+				<div>{error && <p className='text-red-500'>{error}</p>}</div>
+				<a onClick={handleForget} className='hover:underline' rel="noopener noreferrer" href="#">Forgot Password?</a>
 			</div>
 		</div>
 		<button className="block w-full p-3 text-center rounded-sm dark:text-gray-50 dark:bg-violet-600">Sign in</button>

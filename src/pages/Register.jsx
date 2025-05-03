@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../Provider/AuthContext';
+import toast from 'react-hot-toast';
 
 const Register = () => {
 
-    const {signUp} = useContext(AuthContext);
+    const {signUp,userUpdate} = useContext(AuthContext);
+	const navigate = useNavigate();
 
 
     const handleForm = (e) => {
+		toast.loading('loading',{id:'123'})
         e.preventDefault();
         const name = e.target.name.value;
         const photo = e.target.photo.value;
@@ -17,9 +20,18 @@ const Register = () => {
         signUp(email,password)
         .then(result => {
             console.log(result)
+			userUpdate({displayName:name,photoURL:photo})
+			.then(()=> {
+				navigate('/auth/login')
+				toast.success('register done',{id:'123'})
+			})
+			.catch(error => {
+				toast.error(error.message,{id:'123'})
+			})
         })
         .catch(error => {
-            console.log(error);
+			toast.error(error.message,{id:'123'})
+
         })
     }
     return (

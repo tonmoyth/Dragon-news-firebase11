@@ -7,10 +7,13 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import CardDetails from "../pages/CardDetails";
 import Private from "../PrivateRoute/Private";
+import Loading from "../pages/Loading";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    hydrateFallbackElement:<Loading></Loading>,
+    loader: () => fetch('/news.json'),
     element: <HomeLayout></HomeLayout>,
     children: [
       {
@@ -20,6 +23,7 @@ const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <CategoryNews></CategoryNews>,
+        hydrateFallbackElement:<Loading></Loading>,
         loader: () => fetch("/news.json"),
       },
     ],
@@ -41,6 +45,7 @@ const router = createBrowserRouter([
   {
     path: "/details/:id",
     element: <Private><CardDetails></CardDetails></Private>,
+    hydrateFallbackElement:<Loading></Loading>,
     loader: () => fetch('/news.json')
   },
   {
